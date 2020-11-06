@@ -19,10 +19,14 @@ def read_space_objects_data_from_file(input_filename):
             if len(line.strip()) == 0 or line[0] == '#':
                 continue  # пустые строки и строки-комментарии пропускаем
             object_type = line.split()[0].lower()
-            if object_type == "star":  # FIXME: do the same for planet
+            if object_type == "star":
                 star = Star()
                 parse_star_parameters(line, star)
                 objects.append(star)
+            elif object_type == "planet":
+                planet = Planet()
+                parse_planet_parameters(line, planet)
+                objects.append(planet)
             else:
                 print("Unknown space object")
 
@@ -44,13 +48,14 @@ def parse_star_parameters(line, star):
     **star** — объект звезды.
     """
     line_array = line.split(' ')
-    if line_array[0] == 'Star':
-        star.R = line_array[1]
+    if line_array[0].lower() == 'star':
+        star.R = int(line_array[1])
         star.color = line_array[2]
-        star.x = line_array[3]
-        star.y = line_array[4]
-        star.Vx = line_array[5]
-        star.Vy = line_array[6]
+        star.m = float(line_array[3])
+        star.x = float(line_array[4])
+        star.y = float(line_array[5])
+        star.Vx = float(line_array[6])
+        star.Vy = float(line_array[7])
 
 
 def parse_planet_parameters(line, planet):
@@ -69,13 +74,14 @@ def parse_planet_parameters(line, planet):
     **planet** — объект планеты.
     """
     line_array = line.split(' ')
-    if line_array[0] == 'Planet':
-        planet.R = line_array[1]
+    if line_array[0].lower() == 'planet':
+        planet.R = int(line_array[1])
         planet.color = line_array[2]
-        planet.x = line_array[3]
-        planet.y = line_array[4]
-        planet.Vx = line_array[5]
-        planet.Vy = line_array[6]
+        planet.m = float(line_array[3])
+        planet.x = float(line_array[4])
+        planet.y = float(line_array[5])
+        planet.Vx = float(line_array[6])
+        planet.Vy = float(line_array[7])
 
 
 def write_space_objects_data_to_file(output_filename, space_objects):
@@ -91,8 +97,10 @@ def write_space_objects_data_to_file(output_filename, space_objects):
     """
     with open(output_filename, 'w') as out_file:
         for obj in space_objects:
-            print(out_file, "%s %d %s %f" % ('1', 2, '3', 4.5))
+            out_file.write("%s %d %s %f %f %f %f %f\n" % (
+                obj.type.capitalize(), obj.R, obj.color, obj.m, obj.x, obj.y, obj.Vx, obj.Vy))
             # FIXME: should store real values
+
 
 # FIXME: хорошо бы ещё сделать функцию, сохранающую статистику в заданный файл...
 
